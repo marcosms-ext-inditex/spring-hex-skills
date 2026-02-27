@@ -1,21 +1,59 @@
 ---
 name: cqrs-strict
-description: Apply strict CQRS: separate commands from queries and handlers. Use when adding endpoints or use cases.
+description: Enforce strict CQRS separation between commands and queries in Spring Boot applications.
 ---
 
-# Strict CQRS for Spring Boot
+# Strict CQRS Discipline
+
+## Purpose
+Maintain a clear separation between write operations (commands) and read operations (queries).
+
+---
 
 ## Structure
-- Command + CommandHandler for writes
-- Query + QueryHandler for reads
-- DTOs at the edges (controller/request/response)
 
-## Rules
-1. Commands never return domain entities; return ids or response DTOs.
-2. Queries are side-effect free.
-3. One handler per command/query.
-4. Transactions only in command handlers (or application services).
+For each use case:
 
-## Checklist
-- Naming consistent: CreateXCommand, CreateXHandler, GetXQuery, GetXHandler
-- No “service god class”
+- Command
+- CommandHandler
+- Query
+- QueryHandler
+
+Controllers must delegate only to handlers.
+
+---
+
+## Command Rules
+- Commands modify state.
+- Commands must not return domain entities.
+- Return identifiers or response DTOs.
+- Transactions belong to command handlers.
+
+---
+
+## Query Rules
+- Queries must not modify state.
+- Queries must be side-effect free.
+- Queries return DTOs, not entities.
+
+---
+
+## Architectural Constraints
+- No mixed read/write services.
+- No shared “Service” class handling everything.
+- Each handler handles exactly one use case.
+
+---
+
+## Naming Convention
+- `CreateProductCommand`
+- `CreateProductCommandHandler`
+- `GetProductQuery`
+- `GetProductQueryHandler`
+
+---
+
+## Review Checklist
+- Are responsibilities separated?
+- Is transaction management placed correctly?
+- Is any read logic leaking into command handlers?

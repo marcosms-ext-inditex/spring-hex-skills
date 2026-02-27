@@ -1,23 +1,47 @@
 ---
 name: hex-architecture
-description: Enforce hexagonal architecture in Spring Boot. Use when creating modules, adding adapters, or reviewing architecture boundaries.
+description: Enforce strict hexagonal (ports and adapters) architecture in Spring Boot projects.
 ---
 
-# Hexagonal Architecture Enforcer (Spring Boot)
+# Hexagonal Architecture Enforcement
 
-## Goal
-Keep a strict separation between:
-- Domain (pure business logic)
-- Application (use cases / orchestration)
-- Infrastructure (DB, HTTP, frameworks)
+## Layers
 
-## Rules
-1. Domain must not depend on Spring/JPA/HTTP.
-2. Controllers call application layer only (commands/queries).
-3. Repositories are ports in application/domain; JPA repos are adapters.
-4. Mapping (DTO <-> Domain) happens at boundaries, not inside domain.
-5. No business rules in controllers, mappers, or persistence models.
+- Domain
+- Application
+- Infrastructure
 
-## When editing code
-- Identify the layer of every new class.
-- If a dependency crosses boundaries incorrectly, refactor to a port.
+---
+
+## Dependency Rule
+Dependencies must always point inward:
+
+Infrastructure → Application → Domain
+
+Domain must depend on nothing external.
+
+---
+
+## Ports
+- Defined in application or domain.
+- Represent contracts to the outside world.
+
+---
+
+## Adapters
+- Infrastructure implements ports.
+- Controllers are inbound adapters.
+- Repositories are outbound adapters.
+
+---
+
+## Prohibited Patterns
+- Domain importing Spring annotations.
+- Controllers accessing repositories directly.
+- Application layer depending on JPA entities.
+
+---
+
+## Review Questions
+- Does any layer depend on outer frameworks?
+- Is domain pure and framework-independent?

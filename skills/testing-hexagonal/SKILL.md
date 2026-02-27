@@ -1,16 +1,31 @@
 ---
 name: testing-hexagonal
-description: Enforce a hexagonal testing strategy (domain/application/infrastructure). Use when writing or reviewing tests.
+description: Enforce a layered testing strategy aligned with hexagonal architecture.
 ---
 
-# Hexagonal Testing Strategy (Spring Boot)
+# Hexagonal Testing Strategy
 
-## Levels
-1. Domain tests: pure JUnit, no Spring.
-2. Application tests: handlers with mocked ports.
-3. Infrastructure tests: adapters (JPA, HTTP clients) with focused integration tests.
+## Domain Tests
+- Pure JUnit.
+- No Spring context.
+- Test invariants and behavior.
+
+---
+
+## Application Tests
+- Test handlers.
+- Mock ports.
+- No database.
+
+---
+
+## Infrastructure Tests
+- Focused integration tests.
+- Test repository implementations separately.
+
+---
 
 ## Rules
-- Avoid @SpringBootTest unless it's an end-to-end test.
-- Tests must be fast, deterministic, and isolated.
-- Arrange-Act-Assert, clear naming, no shared mutable fixtures.
+- Avoid overusing @SpringBootTest.
+- Tests must be deterministic and fast.
+- Use clear naming: shouldDoX_whenY.
